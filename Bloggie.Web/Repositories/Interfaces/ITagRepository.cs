@@ -5,6 +5,7 @@ namespace Bloggie.Web.Repositories.Interfaces
 	public interface ITagRepository
 	{
 		Task<Tag?> GetByIdAsync(Guid id);
+		
 		Task<IEnumerable<Tag>> GetAllTagsAsync();
 
 		Task<Tag> CreateAsync(Tag tag);
