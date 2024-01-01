@@ -12,14 +12,14 @@ namespace Bloggie.Web.Controllers
 		private readonly ITagRepository _tagRepository;
 
 		public AdminTagsController(ITagRepository tagRepository)
-        {
-			_tagRepository = tagRepository;
+                {
+		     _tagRepository = tagRepository;
 		}
 
-        [HttpGet]
+                [HttpGet]
 		public IActionResult Add()
 		{
-			return View();
+		      return View();
 		}
 
 		// For Submit the Form.
@@ -27,16 +27,16 @@ namespace Bloggie.Web.Controllers
 		[ActionName("Add")]
 		public async Task<IActionResult> Add(AddTagRequest addTagRequest)
 		{
-			// Mapping AddTagRequest to Tag Domain Model.
-			var tag = new Tag
-			{
-				Name = addTagRequest.Name,
-				DisplayName = addTagRequest.DisplayName
-			};
+		      // Mapping AddTagRequest to Tag Domain Model.
+		      var tag = new Tag
+		      {
+			    Name = addTagRequest.Name,
+			    DisplayName = addTagRequest.DisplayName
+		      };
 
-			await _tagRepository.CreateAsync(tag);
+		      await _tagRepository.CreateAsync(tag);
 
-			return RedirectToAction("List");
+		      return RedirectToAction("List");
 		}
 
 		[HttpGet]
@@ -58,14 +58,14 @@ namespace Bloggie.Web.Controllers
 
 			if(tag != null)
 			{
-				var editTagRequest = new EditTagRequest
-				{
-					Id = tag.Id,
-					Name = tag.Name,
-					DisplayName = tag.DisplayName
-				};
+			     var editTagRequest = new EditTagRequest
+			     {
+				   Id = tag.Id,
+				   Name = tag.Name,
+				   DisplayName = tag.DisplayName
+			     };
 
-				return View(editTagRequest);
+			   return View(editTagRequest);
 			}
 
 			return View(null);
@@ -96,12 +96,11 @@ namespace Bloggie.Web.Controllers
 			{
 				// show error notification
 				return RedirectToAction("Edit", new { id = editTagRequest.Id });
-
 			}
 
 		}
 
-		[HttpPost]
+		 [HttpPost]
 
 		public async Task<IActionResult> Delete(EditTagRequest editTagRequest)
 		{
@@ -115,6 +114,6 @@ namespace Bloggie.Web.Controllers
 
 			// Show an error Notification
 			return RedirectToAction("Edit", new {id = editTagRequest.Id});
-		}
+		 }
 	}
 }
