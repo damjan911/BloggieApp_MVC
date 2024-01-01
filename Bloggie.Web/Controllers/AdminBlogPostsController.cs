@@ -9,50 +9,50 @@ namespace Bloggie.Web.Controllers
 {
 	public class AdminBlogPostsController : Controller
 	{
-		private readonly ITagRepository _tagRepository;
-		private readonly IBlogPostRepository _blogPostRepository;
+	     private readonly ITagRepository _tagRepository;
+	     private readonly IBlogPostRepository _blogPostRepository;
 
-		public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository blogPostRepository)
-        {
-			_tagRepository = tagRepository;
-			_blogPostRepository = blogPostRepository;
-		}
+	     public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository blogPostRepository)
+             {
+		    _tagRepository = tagRepository;
+		    _blogPostRepository = blogPostRepository;
+	     }
 
-        [HttpGet]
-		public async Task<IActionResult> Add()
-		{
-			// Get all tags from Repository.
+             [HttpGet]
+	     public async Task<IActionResult> Add()
+	     {
+		  // Get all tags from Repository.
 
-			var tags = await _tagRepository.GetAllTagsAsync();
+	          var tags = await _tagRepository.GetAllTagsAsync();
 
-			var model = new AddBlogPostsRequest
-			{
-				Tags = tags.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() })
-			};
-			return View(model);
-		}
+		  var model = new AddBlogPostsRequest
+		  {
+			Tags = tags.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() })
+		  };
+		  return View(model);
+	      }
 
-		[HttpPost]
-		[ActionName("Add")]
-		public async Task<IActionResult> Add(AddBlogPostsRequest addBlogPostsRequest)
-		{
-			// Mapping AddBlockPostsRequest to BlockPost Domain Model.
-			var blogPost = new BlogPost
-			{
-				Heading = addBlogPostsRequest.Heading,
-				PageTitle = addBlogPostsRequest.PageTitle,
-				Content = addBlogPostsRequest.Content,
-				ShortDescription = addBlogPostsRequest.ShortDescription,
-				FeaturedImageUrl = addBlogPostsRequest.FeaturedImageUrl,
-				UrlHandle = addBlogPostsRequest.UrlHandle,
-				PublishedDate = addBlogPostsRequest.PublishedDate,
-				Author = addBlogPostsRequest.Author,
-				Visible = addBlogPostsRequest.Visible
-			};
+	      [HttpPost]
+	      [ActionName("Add")]
+	      public async Task<IActionResult> Add(AddBlogPostsRequest addBlogPostsRequest)
+	      {
+		     // Mapping AddBlockPostsRequest to BlockPost Domain Model.
+		     var blogPost = new BlogPost
+		     {
+			   Heading = addBlogPostsRequest.Heading,
+			   PageTitle = addBlogPostsRequest.PageTitle,
+			   Content = addBlogPostsRequest.Content,
+			   ShortDescription = addBlogPostsRequest.ShortDescription,
+			   FeaturedImageUrl = addBlogPostsRequest.FeaturedImageUrl,
+			   UrlHandle = addBlogPostsRequest.UrlHandle,
+			   PublishedDate = addBlogPostsRequest.PublishedDate,
+			   Author = addBlogPostsRequest.Author,
+			   Visible = addBlogPostsRequest.Visible
+		     };
 
-			// Map Tags from selected tags.
+		      // Map Tags from selected tags.
 
-			var selectedTags = new List<Tag>();
+		        var selectedTags = new List<Tag>();
 			foreach (var selectedTagId in addBlogPostsRequest.SelectedTags)
 			{
 				var selectedTagIdAsGuid = Guid.Parse(selectedTagId);
@@ -87,39 +87,37 @@ namespace Bloggie.Web.Controllers
 
 		public async Task<IActionResult> Edit(Guid id)
 		{
-			// Retrieve the result from the Repository
-			var blogPost = await _blogPostRepository.GetByIdAsync(id);
-			var tagsDomainModel = await _tagRepository.GetAllTagsAsync();
+		      // Retrieve the result from the Repository
+		      var blogPost = await _blogPostRepository.GetByIdAsync(id);
+		      var tagsDomainModel = await _tagRepository.GetAllTagsAsync();
 
-			// map the Domain Model into View Model
-			if(blogPost != null)
-			{
-				var editBlogPostRequest = new EditBlogPostsRequest
-				{
-					Id = blogPost.Id,
-					Heading = blogPost.Heading,
-					PageTitle = blogPost.PageTitle,
-					Content = blogPost.Content,
-					ShortDescription = blogPost.ShortDescription,
-					FeaturedImageUrl = blogPost.FeaturedImageUrl,
-					UrlHandle = blogPost.UrlHandle,
-					PublishedDate = blogPost.PublishedDate,
-					Author = blogPost.Author,
-					Visible = blogPost.Visible,
-					Tags = tagsDomainModel.Select(x => new SelectListItem
-					{
-						Text = x.Name,
-						Value = x.Id.ToString()
-					}),
-					SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
-				};
+		      // map the Domain Model into View Model
+		      if(blogPost != null)
+		      {
+			    var editBlogPostRequest = new EditBlogPostsRequest
+			    {
+				 Id = blogPost.Id,
+				 Heading = blogPost.Heading,
+				 PageTitle = blogPost.PageTitle,
+				 Content = blogPost.Content,
+				 ShortDescription = blogPost.ShortDescription,
+				 FeaturedImageUrl = blogPost.FeaturedImageUrl,
+				 UrlHandle = blogPost.UrlHandle,
+				 PublishedDate = blogPost.PublishedDate,
+				 Author = blogPost.Author,
+				 Visible = blogPost.Visible,
+				 Tags = tagsDomainModel.Select(x => new SelectListItem
+				 {
+				      Text = x.Name,
+				      Value = x.Id.ToString()
+				 }),
+				 SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
+			     };
 
 				return View(editBlogPostRequest);
-		     
 			}
-
+   
 			return View(null);
-
 		}
 
 		// For Edit Form
@@ -147,15 +145,15 @@ namespace Bloggie.Web.Controllers
 			var selectedTags = new List<Tag>();
 			foreach(var selectedTag in editBlogPostsRequest.SelectedTags)
 			{
-				if(Guid.TryParse(selectedTag, out var tag))
-				{
-					var foundTag = await _tagRepository.GetByIdAsync(tag);
+			     if(Guid.TryParse(selectedTag, out var tag))
+			     {
+				   var foundTag = await _tagRepository.GetByIdAsync(tag);
 
-					if(foundTag != null)
-					{
-						selectedTags.Add(foundTag);
-					}
-				}
+				   if(foundTag != null)
+				   {
+					 selectedTags.Add(foundTag);
+				   }
+			     }
 			}
 
 			blogPost.Tags = selectedTags;
