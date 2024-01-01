@@ -5,15 +5,15 @@ namespace Bloggie.Web.Data
 {
 	public class BloggieDbContext : DbContext
 	{
-		public BloggieDbContext(DbContextOptions options) : base(options)
-		{
+	     public BloggieDbContext(DbContextOptions options) : base(options)
+	     {
 
-		}
+	     }
 
-        public DbSet<BlogPost> BlogPosts { get; set; }
+             public DbSet<BlogPost> BlogPosts { get; set; }
 
-        public DbSet<Tag> Tags { get; set; }
+             public DbSet<Tag> Tags { get; set; }
 
 
-    }
+         }
 }
